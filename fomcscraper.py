@@ -5,6 +5,8 @@ import time
 import urllib.request
 import re
 import os
+import requests
+from bs4 import BeautifulSoup
 
 # automatic chromedriver installation
 import chromedriver_autoinstaller
@@ -19,11 +21,33 @@ historical_docs = 'https://www.federalreserve.gov/monetarypolicy/fomc_historical
 driver = webdriver.Chrome()  #define which browser you are going to be using, I will use Chrome
 driver.get(historical_docs)  #navigate to the proper url
 
+#dictionary holding word to year mappings
+beige = {}
+
 #method that will take in the url for a specific year, and then scrape documents from the months in that year
 def getLinksForYear(year, dir):
 	url = driver.find_element_by_link_text(str(year)).get_attribute('href')
 	#go to url for that year
 	driver.get(url)
+
+
+	#some years do not have a pdf for its beige books, so must get the url of html page instead
+	if year < 2009 and year > 2002:
+		b = driver.find_elements_by_partial_link_text('Beige Book')
+		beige_books = [i.get_attribute('href') for i in b]
+		
+		for u in beige_books:
+			res = requests.get(u)
+			html_page = res.content
+
+			soup = BeautifulSoup(html_page, 'html.parser')
+		
+		
+			text = soup.find_all(text=True)
+
+			for t in text:
+				beige[t] = year
+
 
 	#find all the links by looking for urls that have keyword 'pdf' in them
 	d = driver.find_elements_by_partial_link_text('PDF')
