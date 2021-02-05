@@ -4,43 +4,24 @@ from selenium.webdriver.common.action_chains import ActionChains
 import time
 import urllib.request
 import re
+import os
 
-#take user input for which years they want to scrape from
-val = input("Enter how many years you want to go back from 2013, with a minimum of 1 and a maximum of 27 ") 
+# automatic chromedriver installation
+import chromedriver_autoinstaller
+chromedriver_autoinstaller.install()  # Check if the current version of chromedriver exists
+                                      # and if it doesn't exist, download it automatically,
+                                      # then add chromedriver to path
 
-years = int(val)
+from util import folder_check
 
-#create a list to hold the years that you want to scrape from
-yearsList = [i for i in range((2014 - years), 2014)]
+historical_docs = 'https://www.federalreserve.gov/monetarypolicy/fomc_historical_year.htm'  # Historical documents site
 
-yearsList.reverse()
-
-#define which browser you are going to be using, I will use Chrome
-
-driver = webdriver.Chrome()
-
-
-
-
-#navigate to the proper url
-driver.get('https://www.federalreserve.gov/monetarypolicy/fomc_historical_year.htm')
-
-
-#get web element based on the text of the link, and grab its href attribute (the link to that years fomc documents)
-year_urls = [driver.find_element_by_link_text(str(i)).get_attribute('href') for i in yearsList]
-
-
-
-
-
-
-
-
-
-
+driver = webdriver.Chrome()  #define which browser you are going to be using, I will use Chrome
+driver.get(historical_docs)  #navigate to the proper url
 
 #method that will take in the url for a specific year, and then scrape documents from the months in that year
-def getLinksForYear(url):
+def getLinksForYear(year, dir):
+	url = driver.find_element_by_link_text(str(year)).get_attribute('href')
 	#go to url for that year
 	driver.get(url)
 
@@ -52,21 +33,28 @@ def getLinksForYear(url):
 	for link in docuList:
 		temp = link
 		ind = temp.rfind('/')
-		filename = link[ind+1::]
+		foldername = os.path.join(data_dir, str(year))
+		folder_check(foldername)
+		filename = os.path.join(foldername, link[ind+1::])
 		download_file(link, filename)
-		
 		
 #method to download pdf file using its url
 def download_file(download_url, filename):
 	print(filename)
 	file = str(filename)
 	response = urllib.request.urlopen(download_url)    
-	file = open(filename, 'wb')
+	file = open(filename, 'wb+')
 	file.write(response.read())
 	file.close()
- 
 
+if __name__ == '__main__':
+	#take user input for which years they want to scrape from
+	val = input("Enter how many years you want to go back from 2013, with a minimum of 1 and a maximum of 27:\t") 
+	years = int(val)
 
-for link in year_urls:
-	getLinksForYear(link)
+	data_dir = os.path.join("data", "pdfs")  # Directory for all documents
+	folder_check(data_dir)
 
+	for y in range((2014 - years), 2014)[::-1]:
+		getLinksForYear(y, data_dir)
+		driver.back()
