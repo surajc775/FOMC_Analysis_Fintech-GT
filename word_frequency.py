@@ -15,10 +15,24 @@ def n_most_common(page_list, n):
     counts = word_freq_pdf(page_list)
     return counts.most_common(n)
 
+# on second thought maybe loading this with numpy would be faster, buuuuuuut
 if __name__ == "__main__":
     pkl_dir = os.path.join("data", "pkl")
-    year = 2013
-    filename = "Beigebook_20130116.pkl"
-    filepath = os.path.join(pkl_dir, str(year), filename)
-    word_2darray = pickle.load(open(filepath, 'rb+'))
-    print(n_most_common(word_2darray, 10))
+    big_word_bank = []
+    year_data = {}
+    for file_tuple in os.walk(pkl_dir):
+        if not file_tuple[2] or file_tuple[0] == pkl_dir:
+            continue
+        year = int(file_tuple[0].rsplit("/", 1)[-1])
+        all_docs = [pickle.load(open(os.path.join(file_tuple[0], fn), 'rb+')) for fn in file_tuple[2]]
+        # flatten the array
+        all_docs = [arr for array2d in 
+        all_docs for arr in array2d]
+        big_word_bank.extend(all_docs)
+        year_data[year] = word_freq_pdf(all_docs)
+    overall_freq = word_freq_pdf(big_word_bank)
+
+    # Store data
+    results_dir = "results"
+    pickle.dump(year_data, open(os.path.join(results_dir, 'year_freq.pkl'), 'wb+'))
+    pickle.dump(overall_freq, open(os.path.join(results_dir, 'overal_freq.pkl'), 'wb+'))
