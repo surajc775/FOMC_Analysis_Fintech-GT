@@ -1,13 +1,16 @@
 import pandas
 from collections import Counter
-
 import pickle
 import os
+
+from viterbi import viterbi_segment
 
 def word_freq_pdf(page_list):
     # the input for this method is a list of list, each sublist containing all keywords from a page
     # returns Counter object
-    flattened_list = [keyword for page in page_list for keyword in page]
+    parsed_words = [viterbi_segment(keyword)[0] for page in page_list for keyword in page]
+    flattened_list = [word for arr in parsed_words for word in arr]  # run viterbi algo on the list and flatten again
+    flattened_list = [w for w in flattened_list if len(w) >= 3]
     c = Counter(flattened_list)
     return c
 
@@ -35,4 +38,4 @@ if __name__ == "__main__":
     # Store data
     results_dir = "results"
     pickle.dump(year_data, open(os.path.join(results_dir, 'year_freq.pkl'), 'wb+'))
-    pickle.dump(overall_freq, open(os.path.join(results_dir, 'overal_freq.pkl'), 'wb+'))
+    pickle.dump(overall_freq, open(os.path.join(results_dir, 'overall_freq.pkl'), 'wb+'))

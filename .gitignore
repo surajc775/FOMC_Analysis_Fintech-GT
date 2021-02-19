@@ -142,3 +142,7 @@ cython_debug/
 
 # ignore results for the time being
 /results
+
+# google sheets credentials
+credentials.json
+token.pickle

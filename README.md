@@ -14,3 +14,4 @@ This repository does the following:
 - Download the PDFs using `fomcscraper.py`
 - Convert the PDFs into text (stored in pickle files) and eliminate all punctuation and stop words (i.e. common English words) using `data_processing.py`
 - Aggregate word frequencies by word and by date with `word_frequency.py`
+- Create CSV files from Counter objects
