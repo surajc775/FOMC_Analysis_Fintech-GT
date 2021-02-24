@@ -15,7 +15,8 @@ from util import folder_check
 
 def pdfToList(filename):
     with pdfplumber.open(filename) as pdf:
-        data = [text_cleaner(page.extract_text()) for page in pdf.pages]
+        # apparently some data can be parsed as non-byte or string objects, so we need to cast to string
+        data = [text_cleaner(str(page.extract_text())) for page in pdf.pages]
         return data
 
 def text_cleaner(text_str):
@@ -44,8 +45,9 @@ if __name__ == "__main__":
         if not file_tuple[2] or file_tuple[0] == data_dir:
             continue
         curr_dir = file_tuple[0]
-        dir_parts = file_tuple[0].rsplit("/", 2)
-        pkl_file_base = os.path.join(dir_parts[0], pkl_dirname, dir_parts[2])
+        parent_folder, folder = os.path.split(curr_dir)
+        base_dir, second_dir = os.path.split(parent_folder)
+        pkl_file_base = os.path.join(base_dir, pkl_dirname, folder)
         folder_check(pkl_file_base)
         for filename in file_tuple[2]:
             print(f"Parsing {filename}")
