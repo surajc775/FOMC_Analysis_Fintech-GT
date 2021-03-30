@@ -23,3 +23,14 @@ with open(os.path.join(results_dir, "yearly_freq.csv"), 'w+') as f:
         data_counter = data_dict[year]
         for word in data_counter:
             writer.writerow([year, word, data_counter.get(word)])
+
+# document-based frequencies
+with open(os.path.join(results_dir, "doctype_freq.csv"), 'w+') as f:
+    writer = csv.writer(f, delimiter=",")
+    headers = ['Document Type', 'Word', 'Count']
+    writer.writerow(headers)
+    data_dict = pickle.load(open(os.path.join(results_dir, "doctype_freq.pkl"), 'rb+'))
+    for doctype in data_dict:
+        data_counter = data_dict[doctype]
+        for word in data_counter:
+            writer.writerow([doctype, word, data_counter.get(word)])

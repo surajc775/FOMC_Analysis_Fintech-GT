@@ -1,0 +1,14 @@
+Beige Books: beigebook, beige
+Longer Run Goals: LongerRunGoals
+Agenda: Agenda
+Material: material
+Meeting: meeting
+Teal Book: tealbook
+SEP Compilation: SEPcompilation
+Conference Call: confcall
+Meeting Minutes: fomcminutes
+Full Report: fullreport
+Green Book: gbpt1, gbpt2, gbsup
+Blue Book: blue book
+Minutes of Action: fomcmoa
+Record of Policy Actions: fomcropa

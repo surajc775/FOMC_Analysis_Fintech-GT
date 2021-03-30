@@ -147,4 +147,10 @@ cython_debug/
 
 # google sheets credentials
 credentials.json
+
 token.pickle
+doc_types.pkl
+.env
+
+# just for testing
+data_copy

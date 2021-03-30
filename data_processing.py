@@ -35,19 +35,17 @@ def text_cleaner_basic(filename, text_list):
     return [page for page in text_list if len(re.split('\W+', page)) >= 50 and not "TABLE OF CONTENTS" in page]  # gotta make sure there's like actual words on it
 
 if __name__ == "__main__":
-    source_dir = os.path.join("data")
-    pdfs_dirname = "pdfs"
-    pkl_dirname = "pkl"
-    data_dir = os.path.join(source_dir, pdfs_dirname)
-    pickle_dir = os.path.join(source_dir, pkl_dirname)
-    folder_check(pickle_dir)
+    data_base_dir, pdf_dir, pkl_dir = os.environ.get("data_dir", "data"), os.environ.get("pdf_dir", "pdfs"), os.environ.get("pkl_dir", "pkl")
+    data_dir = os.path.join(data_base_dir, pdf_dir)
+    pkl_dir = os.path.join(data_base_dir, pkl_dir)
+    folder_check(pkl_dir)
     for file_tuple in os.walk(data_dir):
         if not file_tuple[2] or file_tuple[0] == data_dir:
             continue
         curr_dir = file_tuple[0]
         parent_folder, folder = os.path.split(curr_dir)
         base_dir, second_dir = os.path.split(parent_folder)
-        pkl_file_base = os.path.join(base_dir, pkl_dirname, folder)
+        pkl_file_base = os.path.join(base_dir, pkl_dir, folder)
         folder_check(pkl_file_base)
         for filename in file_tuple[2]:
             print(f"Parsing {filename}")

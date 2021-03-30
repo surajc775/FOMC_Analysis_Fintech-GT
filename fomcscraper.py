@@ -8,6 +8,8 @@ import os
 import requests
 from bs4 import BeautifulSoup
 
+from dotenv import load_dotenv
+
 # automatic chromedriver installation
 import chromedriver_autoinstaller
 chromedriver_autoinstaller.install()  # Check if the current version of chromedriver exists
@@ -76,7 +78,9 @@ if __name__ == '__main__':
 	val = input("Enter how many years you want to go back from 2013, with a minimum of 1 and a maximum of 27:\t") 
 	years = int(val)
 
-	data_dir = os.path.join("data", "pdfs")  # Directory for all documents
+	load_dotenv('.env')
+	data_dir, pdf_dir = os.environ.get("data_dir", "data"), os.environ.get("pdf_dir", "pdfs")
+	data_dir = os.path.join(data_dir, pdf_dir)  # Directory for all documents
 	folder_check(data_dir)
 
 	for y in range((2014 - years), 2014)[::-1]:
