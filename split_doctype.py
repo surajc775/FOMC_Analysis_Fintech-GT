@@ -51,5 +51,5 @@ def folder_merge(folder_path):
 
 if __name__ == "__main__":
     data_dir = os.environ.get("data_dir", "data")
-    # folder_merge(data_dir)
+    folder_merge(data_dir)
     folder_split(data_dir)

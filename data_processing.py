@@ -11,7 +11,7 @@ from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords
 stop_words = set(stopwords.words('english'))
 
-from util import folder_check
+from util import folder_check, split_dir
 
 def pdfToList(filename):
     with pdfplumber.open(filename) as pdf:
@@ -36,6 +36,7 @@ def text_cleaner_basic(filename, text_list):
 
 if __name__ == "__main__":
     data_base_dir, pdf_dir, pkl_dir = os.environ.get("data_dir", "data"), os.environ.get("pdf_dir", "pdfs"), os.environ.get("pkl_dir", "pkl")
+    ld, lp = len(split_dir(data_base_dir)), len(split_dir(pkl_dir))
     data_dir = os.path.join(data_base_dir, pdf_dir)
     pkl_dir = os.path.join(data_base_dir, pkl_dir)
     folder_check(pkl_dir)
@@ -43,9 +44,8 @@ if __name__ == "__main__":
         if not file_tuple[2] or file_tuple[0] == data_dir:
             continue
         curr_dir = file_tuple[0]
-        parent_folder, folder = os.path.split(curr_dir)
-        base_dir, second_dir = os.path.split(parent_folder)
-        pkl_file_base = os.path.join(base_dir, pkl_dir, folder)
+        dir_parts = split_dir(curr_dir)
+        pkl_file_base = os.path.join(pkl_dir, os.path.join(*dir_parts[ld+lp:]))
         folder_check(pkl_file_base)
         for filename in file_tuple[2]:
             print(f"Parsing {filename}")

@@ -27,3 +27,4 @@ Perform the following in the order shown
 
 - Separate results by document type (e.g. Beige Books, Blue Books) using `split_doctype.py`
 - Create CSV files from Counter objects with `counter_csv.py`
+- Generate N-Grams of words by using `generate_ngrams.py`

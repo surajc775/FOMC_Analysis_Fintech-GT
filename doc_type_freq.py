@@ -18,13 +18,14 @@ counter_obj = {}  # will initially hold pages, and then later be turned into the
 counter_attr = {}  # same thing except one more layer (for example for bigrams, trigrams, each will have its own mapping)
 for path, folders, files in os.walk(os.path.join(data_dir, pkl_dir)):
     # need to choose the folders with actual content in them
-    if not files or path == pkl_dir or (len(files) == 1 and files[0] == ".DS_Store"):
+    if not files or path == os.path.join(data_dir, pkl_dir) or (len(files) == 1 and files[0] == ".DS_Store"):
         continue
     
     # get year and doc type
     path_parts = split_dir(path)
     len_dd, len_pd = len(split_dir(data_dir)), len(split_dir(pkl_dir))  # *insert len(pp) joke here*
     # also: I'm assuming the files are divided by year and then by doc type
+    print(path)
     year, doctype = int(path_parts[len_dd + len_pd]), path_parts[len_dd + len_pd + 1]
 
     if (len(path_parts) > len_dd + len_pd + 2):  # meaning its in a subdirectory
